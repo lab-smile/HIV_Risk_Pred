@@ -1,2 +1,4 @@
 # HIV_Risk_Pred
-Learning on forecasting HIV epidemic based on individuals' contact networks
+
+This is a pytorch implementation of our research:  
+Learning on forecasting HIV epidemic based on patients' contact networks
