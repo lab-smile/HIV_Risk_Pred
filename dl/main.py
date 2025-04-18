@@ -65,8 +65,8 @@ def main(args):
         
     device = torch.device("cuda" if args.num_gpus > 0 else "cpu")
     model = MODULE.Net(args)
-    args.permutation_test = True
-    args.permutation_num = 20
+    #args.permutation_test = True
+    #args.permutation_num = 20
 
     dl_dict = dict()
     num_train_sample = 1
@@ -91,8 +91,7 @@ def main(args):
         trainer.train()
         trainer.args.mode = "eval"
     
-    if not (args.mis_aly or args.embedding):
-        trainer.eval("valid")
+    trainer.eval("valid")
     trainer.eval("test")
     
 
@@ -102,7 +101,7 @@ def main(args):
         cat_feat = ['Gender', 'Race', 'Ethnicity', 'CD_MaritalStatus', 'HaveNeedlePartners',
                     'SyphilisTestResult', 'SexualOrientation','HistoryOfPriorSTD', 'MSM', 'EHE']
         val_feat = ['NO_SexPartners', 'Age']
-        feat_col = val_feat
+        feat_col = cat_feat
         for shuffle_feat in feat_col:
             args.permutation_feat = shuffle_feat
             for i in range(args.permutation_num):

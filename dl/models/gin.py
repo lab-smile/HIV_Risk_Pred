@@ -80,7 +80,7 @@ class MLP(nn.Module):
 
 class Net(nn.Module):
     """GIN model"""
-    def __init__(self, args, num_layers=10, num_mlp_layers=5, hidden_dim=32,
+    def __init__(self, args, num_layers=10, num_mlp_layers=5, hidden_dim=64,
                  final_dropout=0.5, learn_eps=True, graph_pooling_type='sum',
                  neighbor_pooling_type='sum'):
         """model parameters setting

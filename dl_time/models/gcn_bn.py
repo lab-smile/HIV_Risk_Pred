@@ -15,7 +15,7 @@ class Net(nn.Module):
         super(Net, self).__init__()
         in_feats = 33
         num_classes = 2
-        h_feat = 32
+        h_feat = 64
 
         self.conv1 = GraphConv(in_feats, h_feat)
         self.bn1 = nn.BatchNorm1d(h_feat)

@@ -51,14 +51,7 @@ class Dataset(DGLDataset):
                         np.random.shuffle(shuffle_col)
                         test_df[col] = shuffle_col
                     self.node_df = pd.concat([bg_df, test_df])
-        '''
-        if phase in ["train"]:
-            self.node_df = pd.read_csv(f"{ds_folder}/{phase}.csv", low_memory=False)
-            self.edge_df = pd.read_csv(f"{ds_folder}/{phase}_edge.csv", low_memory=False)
-        else:
-            self.node_df = pd.read_csv(f"{ds_folder}/{phase}.csv", low_memory=False)
-            self.edge_df = pd.read_csv(f"{ds_folder}/{phase}_edge.csv", low_memory=False)
-        '''
+
         self.net_ids = self.node_df["network_id"].unique()  # num of trees
 
         self.node_feat_cols = self.node_df.columns[-33:]
@@ -142,7 +135,7 @@ def gen_label_weight(args):
     n_classes = len(label_counter)
 
     label_weights = [n_samples / (n_classes * label_counter[i]) for i in range(n_classes)]
-    label_weights[1] = label_weights[1]*2
+    #label_weights[1] = label_weights[1]*2
     return label_weights
 
 

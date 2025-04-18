@@ -128,18 +128,23 @@ def plot_roc(fpr, tpr, roc_auc, save_path):
     plt.legend(loc="lower right")
     plt.show()
     fig.savefig(osp.join(save_path, "ROC.png"))
-
+    roc = pd.DataFrame(columns=['fpr','tpr'])
+    roc['fpr'] = fpr
+    roc['tpr'] = tpr
+    if not Path(f"../test/roc").exists():
+        os.mkdir(f"../test/roc")
+    roc.to_csv(f"../test/roc/roc_{args.model}.csv",index=False)
 
 def plot_confusion_mat(y_true, y_pred, labels, save_path):
     conf_mat = confusion_matrix(y_true, y_pred, normalize="true")
-    '''
+
     cm = pd.DataFrame(columns=['true','predict'])
     cm['true'] = y_true
     cm['predict'] = y_pred
     if not Path(f"../test/cm").exists():
         os.mkdir(f"../test/cm")
     cm.to_csv(f"../test/cm/cm_{args.model}.csv",index=False)
-    '''
+    
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.heatmap(conf_mat, annot=True, fmt=".3f", linewidths=.5, cmap="YlGnBu", ax=ax, annot_kws={"fontsize":30})
     ax.set_ylabel('True labels', fontsize=23)

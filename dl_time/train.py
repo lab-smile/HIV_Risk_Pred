@@ -131,157 +131,77 @@ class Trainer(object):
     def train_one_epoch(self, dl):
         self.model.train()
         metrics_dict = defaultdict(list)
-        if self.graph_info:
-            for i_batch, batched_graph in enumerate(dl, start=1):
-                logger.debug(f"i_batch: {i_batch}")
-                self.optimizer.zero_grad()
-                y_pred, info = self.model(batched_graph)
-                y_true = batched_graph.ndata['label']
+        for i_batch, batched_graph in enumerate(dl, start=1):
+            logger.debug(f"i_batch: {i_batch}")
+            self.optimizer.zero_grad()
+            y_pred, info = self.model(batched_graph)
+            y_true = batched_graph.ndata['label']
 
-                if self.args.loss == "ce":
-                    loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
-                else:
-                    raise NotImplementedError
-                [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
+            if self.args.loss == "ce":
+                loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
+            else:
+                raise NotImplementedError
+            [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
 
-                total_loss = loss_dict['loss']
+            total_loss = loss_dict['loss']
 
-                total_loss.backward()
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.args.grad_clip)
-                self.optimizer.step()
+            total_loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.args.grad_clip)
+            self.optimizer.step()
 
-                if i_batch % self.args.log_train_freq == 0:
-                    logger.info("{}-[{}/{} ({:.0f}%)]: train-{}".format(
-                        self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
-                        {k: v.item() for k, v in loss_dict.items()}))
-                    loss_dict["scope"] = "train_batch"
-                    self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
+            if i_batch % self.args.log_train_freq == 0:
+                logger.info("{}-[{}/{} ({:.0f}%)]: train-{}".format(
+                    self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
+                    {k: v.item() for k, v in loss_dict.items()}))
+                loss_dict["scope"] = "train_batch"
+                self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
 
-            train_metrics_dict = {"scope": "train"}
-            train_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
-            return train_metrics_dict
-        else:
-            for i_batch, (samples, labels,sims) in enumerate(dl, start=1):
-                logger.debug(f"i_batch: {i_batch}")
-                self.optimizer.zero_grad()
-                if args.model in ["deepset","transet"]:
-                    samples = np.expand_dims(samples.cpu(),axis=2)
-                    samples = torch.from_numpy(samples).float().cuda()
-                y_pred, info = self.model(samples)
-                y_true = labels
+        train_metrics_dict = {"scope": "train"}
+        train_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
+        return train_metrics_dict
 
-                if self.args.loss == "ce":
-                    loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
-                else:
-                    raise NotImplementedError
-                [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
-
-                total_loss = loss_dict['loss']
-
-                total_loss.backward()
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.args.grad_clip)
-                self.optimizer.step()
-
-                if i_batch % self.args.log_train_freq == 0:
-                    logger.info("{}-[{}/{} ({:.0f}%)]: train-{}".format(
-                        self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
-                        {k: v.item() for k, v in loss_dict.items()}))
-                    loss_dict["scope"] = "train_batch"
-                    self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
-
-            train_metrics_dict = {"scope": "train"}
-            train_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
-            return train_metrics_dict
 
     def eval_one_epoch(self, scope, dl):
         self.model.eval()
         metrics_dict = defaultdict(list)
         y_trues, y_predscores, y_times = [], [], []
         with torch.no_grad():
-            if self.graph_info:
-                for i_batch, batched_graph in enumerate(dl, start=1):
-                    y_pred, info = self.model(batched_graph)
-                    y_predscores.append(y_pred.to(torch.device("cpu")).numpy())
+            for i_batch, batched_graph in enumerate(dl, start=1):
+                y_pred, info = self.model(batched_graph)
+                y_predscores.append(y_pred.to(torch.device("cpu")).numpy())
 
-                    y_true = batched_graph.ndata['label']
-                    y_time = batched_graph.ndata['time']
-                    y_trues.append(y_true.to(torch.device("cpu")).numpy())
-                    y_times.append(y_time.to(torch.device("cpu")).numpy())
+                y_true = batched_graph.ndata['label']
+                y_time = batched_graph.ndata['time']
+                y_trues.append(y_true.to(torch.device("cpu")).numpy())
+                y_times.append(y_time.to(torch.device("cpu")).numpy())
                     
-                    #mask = np.where(y_time >= 2017)
-                    #if scope == 'test':
-                    #    mask = np.where(y_time >= 2019)                    
-                    if self.args.loss == "ce":
-                        loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
-                    else:
-                        raise NotImplementedError
+                #mask = np.where(y_time >= 2017)
+                #if scope == 'test':
+                #    mask = np.where(y_time >= 2019)                    
+                if self.args.loss == "ce":
+                    loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
+                else:
+                    raise NotImplementedError
 
-                    [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
+                [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
 
-                    if i_batch % self.args.log_valid_freq == 0:
-                        logger.info('{}-[{}/{} ({:.0f}%)]: {}-{}'.format(
-                            self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
-                            scope, {k: v.item() for k, v in loss_dict.items()}))
-                        loss_dict['scope'] = '{}_batch'.format(scope)
-                        logger.debug('Batch: {}'.format(self.epoch * len(dl) + i_batch))
-                        if self.args.mode == 'train':
-                            self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
-                    logger.debug('Eval_batch: {}'.format(i_batch))
-                valid_metrics_dict = {'scope': scope}
-                valid_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
+                if i_batch % self.args.log_valid_freq == 0:
+                    logger.info('{}-[{}/{} ({:.0f}%)]: {}-{}'.format(
+                        self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
+                        scope, {k: v.item() for k, v in loss_dict.items()}))
+                    loss_dict['scope'] = '{}_batch'.format(scope)
+                    logger.debug('Batch: {}'.format(self.epoch * len(dl) + i_batch))
+                    if self.args.mode == 'train':
+                        self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
+                logger.debug('Eval_batch: {}'.format(i_batch))
+            valid_metrics_dict = {'scope': scope}
+            valid_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
 
-                valid_pred_dict = {"y_true": np.concatenate(y_trues).reshape(-1),
+            valid_pred_dict = {"y_true": np.concatenate(y_trues).reshape(-1),
                                "y_predscore": np.concatenate(y_predscores),
                                "y_time": np.concatenate(y_times).reshape(-1)}
-                return valid_metrics_dict, valid_pred_dict
+            return valid_metrics_dict, valid_pred_dict
                 
-            else:
-                for i_batch, (samples,labels,sims) in enumerate(dl, start=1):
-                    if args.model in ["deepset","transet"]:
-                        samples = np.expand_dims(samples.cpu(),axis=2)
-                        samples = torch.from_numpy(samples).float().cuda()
-                    if self.args.embedding:
-                        y_pred, embedding, info = self.model(samples)
-                    else:
-                        y_pred, info = self.model(samples)
-                    y_predscores.append(y_pred.to(torch.device("cpu")).numpy())
-
-                    y_true = labels
-                    y_trues.append(y_true.to(torch.device("cpu")).numpy())
-                    if self.args.embedding:
-                        if i_batch == 1:
-                            embeds = embedding.detach().cpu().numpy()
-                            embed_labels = np.hstack((y_true.detach().cpu().numpy().reshape(-1,1),sims.detach().cpu().numpy().reshape(-1,1)))
-                        else:
-                            embeds = np.vstack((embeds,embedding.detach().cpu().numpy()))
-                            embed_labels = np.vstack((embed_labels,np.hstack((y_true.detach().cpu().numpy().reshape(-1,1),sims.detach().cpu().numpy().reshape(-1,1)))))
-                    if self.args.loss == "ce":
-                        loss_dict = self.ce_loss_f(y_pred, y_true, weight=self.label_weights)
-                    else:
-                        raise NotImplementedError
-
-                    [metrics_dict[k].append(v.item()) for k, v in loss_dict.items()]
-
-                    if i_batch % self.args.log_valid_freq == 0:
-                        logger.info('{}-[{}/{} ({:.0f}%)]: {}-{}'.format(
-                            self.epoch, i_batch, len(dl), 100. * (i_batch / len(dl)),
-                            scope, {k: v.item() for k, v in loss_dict.items()}))
-                        loss_dict['scope'] = '{}_batch'.format(scope)
-                        logger.debug('Batch: {}'.format(self.epoch * len(dl) + i_batch))
-                        if self.args.mode == 'train':
-                            self.summary.add_summary(self.epoch * len(dl) + i_batch, **loss_dict)
-                    logger.debug('Eval_batch: {}'.format(i_batch))
-                valid_metrics_dict = {'scope': scope}
-                valid_metrics_dict.update({k: np.average(np.array(v)) for k, v in metrics_dict.items()})
-
-                valid_pred_dict = {"y_true": np.concatenate(y_trues).reshape(-1),
-                               "y_predscore": np.concatenate(y_predscores)}
-                if self.args.embedding:
-                    if not Path(f"../test/embedding").exists():
-                        os.mkdir(f"../test/embedding")
-                    np.save('tabnet_embedding.npy',embeds)
-                    np.save('tabnet_labels.npy',embed_labels)
-                return valid_metrics_dict, valid_pred_dict
                 
 
     def aly_pred(self, scope, metric_dict, pred_dict=None):

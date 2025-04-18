@@ -120,7 +120,7 @@ def gen_label_weight(args):
     n_classes = len(label_counter)
 
     label_weights = [n_samples / (n_classes * label_counter[i]) for i in range(n_classes)]
-    label_weights[1] = label_weights[1]*2
+    #label_weights[1] = label_weights[1]*2
 
 
     return label_weights

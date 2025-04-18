@@ -91,8 +91,7 @@ def main(args):
         trainer.train()
         trainer.args.mode = "eval"
     
-    if not (args.mis_aly or args.embedding):
-        trainer.eval("valid")
+    trainer.eval("valid")
     trainer.eval("test")
 
     # permutation importance
