@@ -3,21 +3,6 @@
 Improving the diagnosis of HIV is a fundamental objective of the Ending the HIV Epidemic initiative, as it represents the initial step toward treatment and achieving undetectable status, thereby reducing transmission. To attain these objectives effectively, it is crucial to identify the groups most susceptible to HIV, allowing interventions to be tailored to their specific needs.
 In this study, we developed a predictive model designed to assess individual HIV risk within a high-risk contact network -- predicting treatment or at-risk -- leveraging surveillance data collected through routine HIV case interviews in Florida. Unique to our analysis, we explored the incorporation of behavioral network information with Graph Neural Networks to enhance the predictive capacity for identifying individuals within the treatment or intervention categories, when compared to models that mainly consider conventional HIV risk factors. Our deployed HIVForecast learning framework achieved 78.2% and 73.9% balanced accuracy in inductive and transductive learning scenarios respectively, outperforming the conventional prediction algorithms that do not leverage the network structure. We then used our framework to further investigate the importance of demographic and behavioral factors in the HIV risk prediction process and the changing trends of patients demographics across years. Our findings provide valuable insights for healthcare practitioners and policymakers in their efforts to combat HIV infection. An early version of this work won the **Best Paper Award** in The 17th International Conference on Health Informatics (HEALTHINF/BIOSTEC), 2024.
 
-## Paper
-This repository provides the official implementation of the model in the following paper:
-
-**Learning on Forecasting HIV Epidemic Based on Individuals' Contact Networks**
-
-Chaoyue Sun<sup>1</sup>, Yiyang Liu<sup>2</sup>, Christina Parisi<sup>2</sup>, Rebecca Fisk-Hoffman<sup>2</sup>, Marco Salemi<sup>3,4</sup>, Ruogu Fang<sup>1,4,5,6</sup>, Brandi Danforth<sup>7</sup>, Mattia Prosperi<sup>2,4</sup> and Simone Marini<sup>2,4*</sup>
-
-<sup>1</sup> Department of Electrical and Computer Engineering, Herbert Wertheim College of Engineering, University of Florida, Gainesville, FL, USA<br>
-<sup>2</sup> Department of Epidemiology, College of Public Health and Health Professions and College of Medicine, University of Florida, Gainesville, FL, USA<br>
-<sup>3</sup> Department of Pathology, Immunology and Laboratory Medicine, College of Medicine, University of Florida, Gainesville, FL, USA<br>
-<sup>4</sup> Emerging Pathogens Institute, University of Florida, Gainesville, FL, USA<br>
-<sup>5</sup> J. Crayton Pruitt Family Department of Biomedical Engineering, Herbert Wertheim College of Engineering, University of Florida, Gainesville, FL, USA<br>
-<sup>6</sup> Center for Cognitive Aging and Memory, McKnight Brain Institute, University of Florida, Gainesville, FL, USA<br>
-<sup>7</sup> Florida Department of Health, 4025 Esplanade Way, Tallahassee, FL, USA<br>
-
 ## Dependencies
 Please check the dependencies.txt.
 
@@ -35,6 +20,21 @@ python main.py --model 'gin' --model_num 0 --batch_size 32 --init_lr 0.001 --min
 ```
 
 <!--
+## Paper
+This repository provides the official implementation of the model in the following paper:
+
+**Learning on Forecasting HIV Epidemic Based on Individuals' Contact Networks**
+
+Chaoyue Sun<sup>1</sup>, Yiyang Liu<sup>2</sup>, Christina Parisi<sup>2</sup>, Rebecca Fisk-Hoffman<sup>2</sup>, Marco Salemi<sup>3,4</sup>, Ruogu Fang<sup>1,4,5,6</sup>, Brandi Danforth<sup>7</sup>, Mattia Prosperi<sup>2,4</sup> and Simone Marini<sup>2,4*</sup>
+
+<sup>1</sup> Department of Electrical and Computer Engineering, Herbert Wertheim College of Engineering, University of Florida, Gainesville, FL, USA<br>
+<sup>2</sup> Department of Epidemiology, College of Public Health and Health Professions and College of Medicine, University of Florida, Gainesville, FL, USA<br>
+<sup>3</sup> Department of Pathology, Immunology and Laboratory Medicine, College of Medicine, University of Florida, Gainesville, FL, USA<br>
+<sup>4</sup> Emerging Pathogens Institute, University of Florida, Gainesville, FL, USA<br>
+<sup>5</sup> J. Crayton Pruitt Family Department of Biomedical Engineering, Herbert Wertheim College of Engineering, University of Florida, Gainesville, FL, USA<br>
+<sup>6</sup> Center for Cognitive Aging and Memory, McKnight Brain Institute, University of Florida, Gainesville, FL, USA<br>
+<sup>7</sup> Florida Department of Health, 4025 Esplanade Way, Tallahassee, FL, USA<br>
+
 ## Citation
 If you use this code, please cite our papers:
 ```
