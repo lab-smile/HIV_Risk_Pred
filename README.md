@@ -1,6 +1,7 @@
 # Learning on Forecasting HIV Epidemic Based on Individuals' Contact Networks
 
-Improving the diagnosis of HIV is a fundamental objective of the Ending the HIV Epidemic initiative, as it represents the initial step toward treatment and achieving undetectable status, thereby reducing transmission. To attain these objectives effectively, it is crucial to identify the groups most susceptible to HIV, allowing interventions to be tailored to their specific needs. In this study, we developed a predictive model designed to assess individual HIV risk within a high-risk contact network – predicting treatment or at-risk – leveraging surveillance data collected through routine HIV case interviews in Florida. Unique to our analysis, we explored the incorporation of behavioral network information with Graph Neural Networks to enhance the predictive capacity for identifying individuals within the treatment or intervention categories, when compared to models that mainly consider conventional HIV risk factors. Our deployed Graph Isomorphism Network achieved 77.3% and 73.2% balanced accuracy in inductive and transductive learning scenarios respectively, outperforming the traditional prediction algorithms that do not leverage the network structure. We then used our model to further investigate the importance of demographic and behavioral factors in the HIV risk prediction process. Our findings provide valuable insights for healthcare practitioners and policymakers in their efforts to combat HIV infection. Our paper won the **Best Paper Award** in The 17th International Conference on Health Informatics (HEALTHINF/BIOSTEC), 2024.
+Improving the diagnosis of HIV is a fundamental objective of the Ending the HIV Epidemic initiative, as it represents the initial step toward treatment and achieving undetectable status, thereby reducing transmission. To attain these objectives effectively, it is crucial to identify the groups most susceptible to HIV, allowing interventions to be tailored to their specific needs.
+In this study, we developed a predictive model designed to assess individual HIV risk within a high-risk contact network -- predicting treatment or at-risk -- leveraging surveillance data collected through routine HIV case interviews in Florida. Unique to our analysis, we explored the incorporation of behavioral network information with Graph Neural Networks to enhance the predictive capacity for identifying individuals within the treatment or intervention categories, when compared to models that mainly consider conventional HIV risk factors. Our deployed HIVForecast learning framework achieved 78.2% and 73.9% balanced accuracy in inductive and transductive learning scenarios respectively, outperforming the conventional prediction algorithms that do not leverage the network structure. We then used our framework to further investigate the importance of demographic and behavioral factors in the HIV risk prediction process and the changing trends of patients demographics across years. Our findings provide valuable insights for healthcare practitioners and policymakers in their efforts to combat HIV infection. An early version of this work won the **Best Paper Award** in The 17th International Conference on Health Informatics (HEALTHINF/BIOSTEC), 2024.
 
 ## Paper
 This repository provides the official implementation of the model in the following paper:
@@ -25,7 +26,7 @@ Please check the dependencies.txt.
 
 ## Usage examples
 - Train models  
-The frameworks of inductive learning task and transductive learning task are included in [dl] and [dl_time] respectively. Both of them support training GCN and GIN models. 
+The frameworks of inductive learning task and transductive learning task are included in [dl] and [dl_time] respectively. Both of them support training Graph SAGE, GIN, and HIVForecast models. 
 
 Example commands 
 ```sh
@@ -33,6 +34,7 @@ Example commands
 python main.py --model 'gin' --model_num 0 --batch_size 32 --init_lr 0.001 --min_lr 1e-6
 ```
 
+<!--
 ## Citation
 If you use this code, please cite our papers:
 ```
@@ -49,9 +51,10 @@ isbn={978-989-758-688-0},
 issn={2184-4305},
 }
 ```
+-->
 
 ## Acknowledgement
-The authors abide to the Declaration of Helsinki. The study protocol was approved by the University of Florida’s Institutional Review Board (IRB) and by FDOH’s IRB (protocol \#IRB201901041 and \#2020-069, respectively) as exempt. We received data extracts from FDOH’s STARS in a fully de-identified format according to the Health Insurance Portability and Accountability Act (HIPAA). For replication purposes, a STARS data request to the FDOH can be made according to state, federal regulations and compliance with required ethical and privacy policies (Research@flhealth.gov), including IRB approval by FDOH and execution of data user agreement. Requests are independently reviewed by FDOH. We would like to express our gratitude to Colby Cohen and Jared Jashinsky from FDOH for their invaluable assistance in preparing the STARS data for our analysis, for their responsiveness to our inquiries regarding the dataset, and for their instrumental role in facilitating the FDOH internal review and approval process for our manuscript. This work was supported in part by NIH grant R01AI145552, 1F31AA030518-01, R01AI172875 and 1F31AA030733-01. The findings and conclusions in this work are those of the authors and do not necessarily represent the views of the FDOH.
+The authors abide to the Declaration of Helsinki. The study protocol was approved by the University of Florida’s Institutional Review Board (IRB) and by FDOH’s IRB (protocol #IRB201901041 and #2020-069, respectively) as exempt. We received data extracts from FDOH’s STARS in a fully de-identified format according to the Health Insurance Portability and Accountability Act (HIPAA). For replication purposes, a STARS data request to the FDOH can be made according to state, federal regulations and compliance with required ethical and privacy policies ([FDOH]), including IRB approval by FDOH and execution of data user agreement. Requests are independently reviewed by FDOH. We would like to express our gratitude to Colby Cohen and Jared Jashinsky from FDOH for their invaluable assistance in preparing the STARS data for our analysis, for their responsiveness to our inquiries regarding the dataset, and for their instrumental role in facilitating the FDOH internal review and approval process for our manuscript. 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
    [FDOH]: <Research@flhealth.gov>
